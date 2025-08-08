@@ -33,12 +33,32 @@ driver.find_element(by=By.XPATH, value='//*[@id="root"]/div[7]/div/div/div[6]').
 time.sleep(5)
 first_card = []
 job_cards = driver.find_elements(By.CSS_SELECTOR, "a.title")
-first_card = job_cards[0]
-link = first_card.get_attribute("href")
-driver.get(link)
-print(link)
 
-time.sleep(10)
-html = driver.page_source
-with open('AI_Engineer_1.html','w', encoding='utf-8') as f:
-    f.write(html)
+top_cards = job_cards[:5]
+
+hrefs = []
+for a in top_cards:
+    href = a.get_attribute("href")
+    print(href)
+    if href:
+        hrefs.append(href)
+
+for url in hrefs:
+    driver.switch_to.new_window('tab')
+    driver.get(url)
+
+    time.sleep(7)
+    html = driver.page_source
+    with open('AI_Engineer_2.html','a', encoding='utf-8') as f:
+        f.write(f"\n<!--{url}-->\n")
+        f.write(html)
+        f.write("\n"+"="*120+ "\n")
+
+    driver.close()
+    driver.switch_to.window(driver.window_handles[0])
+
+driver.quit()
+
+
+
+
